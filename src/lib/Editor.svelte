@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Stage, Layer, Rect, Text, Image } from 'svelte-konva';
+	import { Stage, Layer, Text, Image } from 'svelte-konva';
 	import { canvasElements } from '$stores/canvasElements';
 	import { onMount } from 'svelte';
 	import EditorLayerButton from './EditorLayerButton.svelte';
@@ -28,10 +28,11 @@
 		<Stage config={{ width: stageContainer?.clientWidth, height: stageContainer?.clientHeight }}>
 			<Layer>
 				{#each $canvasElements as element}
-					{#if element?.type === 'Text'}
-						<Text config={element?.config ?? {}} />
-					{:else if element?.type === 'Image'}
-						<Image config={element?.config ?? {}} />
+					{@const { config, type } = element}
+					{#if type === 'Text'}
+						<Text config={config ?? {}} />
+					{:else if type === 'Image'}
+						<Image config={config ?? {}} />
 					{/if}
 				{/each}
 			</Layer>
@@ -55,28 +56,9 @@
 			class:rounded-tl-lg={activeTab === 'settings'}
 			class="rounded-b-lg px-2 py-4 flex flex-col h-full bg-base-300 border border-base-300 gap-2"
 		>
-			<button type="button" class="btn">
-				<div class="grid place-items-center">
-					<svg
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						fill="none"
-						xmlns="http://www.w3.org/2000/svg"
-					>
-						<path
-							d="M12 6V12M12 12V18M12 12H18M12 12H6"
-							stroke="#3F3F46"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-					</svg>
-				</div>
-				<p class="flex-grow">New</p>
-			</button>
-			<div class="h-[1px] bg-base-100 w-full rounded-full" />
-			<EditorLayerButton />
+			<EditorLayerButton label="New" icon="New" />
+			<div class="h-[1px] bg-base-content/10 w-full rounded-full" />
+			<EditorLayerButton label="Image_1" icon="Image" />
 		</div>
 	</div>
 </div>

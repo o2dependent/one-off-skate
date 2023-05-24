@@ -20,13 +20,8 @@ interface CanvasElementConfigMap {
 	Image: Konva.ImageConfig;
 }
 
-interface CanvasElementMap {
-	Text: Text;
-	Image: Image;
-}
-
 // NOTE: get keys from CanvasElementMap to use as a shorthand
-export type CanvasElementType = keyof CanvasElementMap;
+export type CanvasElementType = keyof CanvasElementConfigMap;
 
 // NOTE: config type for each element
 export interface CanvasElement<Type extends CanvasElementType> {
