@@ -2,7 +2,6 @@ import { writable } from 'svelte/store';
 import type {
 	CanvasElement,
 	CanvasElementConfigMap,
-	CanvasElementMap,
 	CanvasElementType
 } from './canvasElementsTypes';
 
