@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { assets } from '$app/paths';
 	import Konva from 'konva';
 	import {
 		Stage,
@@ -46,6 +47,9 @@
 		x: 0,
 		y: 0
 	};
+	let image: HTMLImageElement | undefined;
+	$: [maskHeight, maskWidth] = image ? [height, height * (image?.width / image?.height)] : [0, 0];
+	$: [maskX, maskY] = [width / 2 - maskWidth / 2, 0];
 
 	onMount(() => {
 		const setSizes = () => {
@@ -54,6 +58,12 @@
 		};
 		setSizes();
 		window.addEventListener('resize', setSizes);
+
+		const img = document.createElement('img');
+		img.src = `${assets}/8_mask_standard.png`;
+		img.onload = () => {
+			image = img;
+		};
 	});
 
 	let selectionActive = false; // If the transformer is active eg. something is selected
@@ -138,6 +148,23 @@
 
 		selectEnd();
 	}
+
+	function handleSelect(id: string) {
+		const node = layer.findOne(`#${id}`);
+		transformer.nodes([node]);
+	}
+
+	function dragMove(event: KonvaEventObject<DragEvent>) {
+		const node = event.currentTarget;
+		const nodes = [node];
+
+		// If the node is already selected, add the transformer to the nodes array
+		if (transformer.nodes().includes(node)) {
+			nodes.push(transformer);
+		}
+
+		transformer.nodes(nodes);
+	}
 </script>
 
 <div
@@ -165,7 +192,6 @@
 			<Rect config={selectionRectangleConfig} bind:handle={selectionRectangle} />
 		</Layer>
 	</Stage> -->
-	<p>{JSON.stringify({ configs })}</p>
 	<Stage
 		on:pointerdown={selectStart}
 		on:pointermove={selectDrag}
@@ -186,23 +212,43 @@
 			<RegularPolygon
 				config={{ x: 400, y: 300, radius: 80, sides: 10, fill: 'purple', draggable: true }}
 			/> -->
+			<Rect
+				config={{ height: maskHeight, width: maskWidth, x: maskX, y: maskY, fill: '#000000' }}
+			/>
 			{#each $canvasElements as element}
-				{@const { config, type } = element}
-				{#if type === 'Text'}
-					<Group>
+				{@const { config, type, id } = element}
+				<Group
+					config={{ id }}
+					on:dragmove={() => transformer.nodes([layer.findOne(`#${id}`)])}
+					on:pointerdown={() => transformer.nodes([layer.findOne(`#${id}`)])}
+				>
+					{#if type === 'Text'}
 						<Text config={{ ...(config ?? {}), draggable: true }} />
-					</Group>
-				{:else if type === 'Image'}
-					<Group>
+					{:else if type === 'Image'}
 						<Image config={{ ...(config ?? {}), draggable: true }} />
-					</Group>
-				{/if}
+					{/if}
+				</Group>
 			{/each}
+		</Layer>
+		<Layer>
+			<Rect config={{ x: 0, y: 0, width: (width - maskWidth) / 1.8, height, fill: '#ffffff' }} />
+			<Rect
+				config={{
+					x: maskWidth + maskX - 1,
+					y: 0,
+					width: (width - maskWidth) / 1.8,
+					height,
+					fill: '#ffffff'
+				}}
+			/>
 
+			{#if image}
+				<Image config={{ image, height: maskHeight, width: maskWidth, x: maskX, y: maskY }} />
+			{/if}
+		</Layer>
+		<Layer>
 			<!-- Position transformer and selection rectagle at the bottom of all components so they are always the topmost elements on the canvas -->
 			<Transformer config={{}} bind:handle={transformer} />
-			<!-- The selection rectangle -->
-			<Rect config={selectionRectangleConfig} bind:handle={selectionRectangle} />
 		</Layer>
 	</Stage>
 </div>
