@@ -8,7 +8,7 @@ import type {
 // SECTION: Canvas Elements Store
 // NOTE: store to hold and manage all canvas elements
 export const canvasElements = writable<CanvasElement<CanvasElementType>[]>([
-	{ config: { text: 'hello' }, type: 'Text', id: '1' }
+	{ config: { text: 'hello' }, label: 'hello', type: 'Text', id: '1' }
 ]);
 
 // NOTE: create a new canvas element with a random id
@@ -19,6 +19,7 @@ export const createCanvasElement = <Type extends CanvasElementType>(
 	return {
 		id: Math.random().toString(36).substr(2, 9),
 		type,
+		label: type,
 		config
 	};
 };
