@@ -1,20 +1,25 @@
 <script lang="ts">
+	import type Konva from 'konva';
 	import type { CanvasElementType } from '$stores/canvasElementsTypes';
 	import SvgAddIcon from './svgs/SvgAddIcon.svelte';
 	import SvgImageIcon from './svgs/SvgImageIcon.svelte';
+	import SvgTextIcon from './svgs/SvgTextIcon.svelte';
 
-	export let icon: CanvasElementType | 'New' = 'Image';
+	export let type: CanvasElementType | 'New' = 'Image';
 	export let label = 'element';
+	export let id: string;
+
+	export let handleClick: () => void = () => {};
 </script>
 
-<button type="button" class="btn btn-ghost">
+<button on:click={handleClick} type="button" class="btn btn-ghost">
 	<div class="icon avatar">
 		<div class="rounded w-6">
-			{#if icon === 'Image'}
+			{#if type === 'Image'}
 				<SvgImageIcon />
-			{:else if icon === 'Text'}
-				<!-- else if content here -->
-			{:else if icon === 'New'}
+			{:else if type === 'Text'}
+				<SvgTextIcon />
+			{:else if type === 'New'}
 				<SvgAddIcon />
 			{/if}
 		</div>

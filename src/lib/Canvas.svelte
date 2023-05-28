@@ -1,155 +1,78 @@
 <script lang="ts">
 	import { assets } from '$app/paths';
-	import Konva from 'konva';
-	import {
-		Stage,
-		Layer,
-		Text,
-		Image,
-		Rect,
-		Group,
-		Transformer,
-		RegularPolygon,
-		Circle
-	} from 'svelte-konva';
+	import type Konva from 'konva';
+	import { Stage, Layer, Text, Image, Rect, Group, Transformer } from 'svelte-konva';
 	import { canvasElements } from '$stores/canvasElements';
 	import { onMount } from 'svelte';
 	import { getRealPointerPos } from '$utils/getRealPointerPos';
 	import type { KonvaEventObject } from 'konva/lib/Node';
+	import CanvasMask from './CanvasMask.svelte';
+
+	const MAX_WIDTH_RESOLUTION = 2486;
+	const MAX_HEIGHT_RESOLUTION = 10000;
 
 	let stageContainer: HTMLDivElement;
-	let width = 0;
-	let height = 0;
+	let width = MAX_WIDTH_RESOLUTION;
+	let height = MAX_HEIGHT_RESOLUTION;
 
-	let stage: Konva.Stage;
-	let layer: Konva.Layer;
-	let transformer: Konva.Transformer;
-	let selectionRectangle: Konva.Rect;
-
-	const SELECTION_RECTANGLE_NAME = 'selection-rectangle';
-	let selectionRectangleConfig = {
-		fill: 'rgba(0,0,255,0.5)',
-		visible: false,
-		x: 0,
-		y: 0,
-		width: 0,
-		height: 0,
-		name: SELECTION_RECTANGLE_NAME
-	};
-	let configs = [
-		{ x: 800, y: 240, radius: 120, fill: 'red' },
-		{ x: 720, y: 80, radius: 120, fill: 'blue' },
-		{ x: 700, y: 400, radius: 120, fill: 'green' }
-	];
+	export let stage: Konva.Stage;
+	export let layer: Konva.Layer;
+	export let transformer: Konva.Transformer;
 
 	// Used to calculate the position and size of the selection rectangle during selection
 	let initialSelectionCoordinates: Konva.Vector2d = {
 		x: 0,
 		y: 0
 	};
-	let image: HTMLImageElement | undefined;
-	$: [maskHeight, maskWidth] = image ? [height, height * (image?.width / image?.height)] : [0, 0];
+
+	// Mask image
+	let maskImage: HTMLImageElement | undefined;
+	$: [maskHeight, maskWidth] = maskImage
+		? [height, height * (maskImage?.width / maskImage?.height)]
+		: [0, 0];
 	$: [maskX, maskY] = [width / 2 - maskWidth / 2, 0];
 
+	// resize
+	function handleResize() {
+		stage.pixelSize(10);
+		width = stageContainer.clientWidth;
+		height = stageContainer.clientHeight;
+		// Scale the stage and its children to fit the container
+		const containerWidth = stageContainer.clientWidth;
+		const containerHeight = stageContainer.clientHeight;
+		const scaleX = containerWidth / width;
+		const scaleY = containerHeight / height;
+		const scale = Math.min(scaleX, scaleY);
+
+		// Adjust the position of the stage to keep the content centered
+		const stageWidth = width * scale;
+		const stageHeight = height * scale;
+		const offsetX = (containerWidth - stageWidth) / 2;
+		const offsetY = (containerHeight - stageHeight) / 2;
+		stage.offset({ x: offsetX, y: offsetY });
+		// stage.position({ x: offsetX, y: offsetY });
+		stage.scale({ x: scale, y: scale });
+
+		stage.batchDraw();
+	}
+	// mount
 	onMount(() => {
-		const setSizes = () => {
-			width = stageContainer.clientWidth;
-			height = stageContainer.clientHeight;
-		};
-		setSizes();
-		window.addEventListener('resize', setSizes);
+		width = stageContainer.clientWidth;
+		height = stageContainer.clientHeight;
+		// Scale the stage and its children to fit the container
+		handleResize();
+
+		// Listen for window resize events and adjust the stage accordingly
+		window.addEventListener('resize', handleResize);
 
 		const img = document.createElement('img');
 		img.src = `${assets}/8_mask_standard.png`;
 		img.onload = () => {
-			image = img;
+			maskImage = img;
 		};
 	});
 
-	let selectionActive = false; // If the transformer is active eg. something is selected
-
-	function selectStart(e: CustomEvent<KonvaEventObject<PointerEvent>>) {
-		const konvaEvent = e.detail;
-
-		// Check if event target is stage (eg. user clicked on empty part of the stage and not any shape)
-		if (konvaEvent.target.getType() !== 'Stage') {
-			return;
-		}
-
-		// If there is already a selection active, cancel it
-		if (selectionActive) {
-			transformer.nodes([]);
-			selectionActive = false;
-			return;
-		}
-
-		const pointerPos = getRealPointerPos(stage.getPointerPosition()!, stage);
-
-		selectionRectangleConfig.x = pointerPos.x;
-		selectionRectangleConfig.y = pointerPos.y;
-
-		initialSelectionCoordinates.x = pointerPos.x;
-		initialSelectionCoordinates.y = pointerPos.y;
-
-		selectionRectangleConfig.visible = true;
-	}
-
-	function selectDrag() {
-		if (!selectionRectangleConfig.visible) {
-			// Currently no selection is active (eg. user is just moving the cursor around)
-			return;
-		}
-
-		const pointerPos = getRealPointerPos(stage.getPointerPosition()!, stage);
-
-		// Set new x coordinate and width of selection rectangle
-		selectionRectangleConfig.x = Math.min(pointerPos.x, initialSelectionCoordinates.x);
-		selectionRectangleConfig.width = Math.abs(pointerPos.x - initialSelectionCoordinates.x);
-
-		// Set new y coordinate and height of selection rectangle
-		selectionRectangleConfig.y = Math.min(pointerPos.y, initialSelectionCoordinates.y);
-		selectionRectangleConfig.height = Math.abs(pointerPos.y - initialSelectionCoordinates.y);
-	}
-
-	function selectEnd() {
-		if (!selectionRectangleConfig.visible) {
-			// Currently no selection is active (eg. user clicked on non empty part of the stage)
-			return;
-		}
-
-		if (layer.children) {
-			const selectedEntities = layer!.children.filter(
-				(child) =>
-					child.name() !== SELECTION_RECTANGLE_NAME &&
-					Konva.Util.haveIntersection(selectionRectangle.getClientRect(), child.getClientRect())
-			);
-
-			if (selectedEntities.length !== 0) {
-				// Add all selected shapes etc. to the transformer
-				transformer.nodes(selectedEntities);
-
-				selectionActive = true;
-			}
-		}
-
-		selectionRectangleConfig.visible = false;
-		selectionRectangleConfig.width = 0;
-		selectionRectangleConfig.height = 0;
-	}
-
-	// Cancel active selection if mouse cursor leaves stage area
-	function selectMouseOut(e: CustomEvent<KonvaEventObject<PointerEvent>>) {
-		const konvaEvent = e.detail;
-
-		// Check if event target is stage (eg. user clicked on empty part of the stage and not any shape)
-		if (konvaEvent.target.getType() !== 'Stage') {
-			return;
-		}
-
-		selectEnd();
-	}
-
-	function handleSelect(id: string) {
+	function selectNode(id: string) {
 		const node = layer.findOne(`#${id}`);
 		transformer.nodes([node]);
 	}
@@ -169,85 +92,44 @@
 
 <div
 	bind:this={stageContainer}
-	class="rounded-lg overflow-hidden shadow-lg bg-base-300 border border-base-300 h-full w-full"
+	class="rounded-lg overflow-hidden shadow-lg border border-base-300 h-full w-full bg-white flex justify-center"
 >
-	<!-- <Stage config={{ width, height }}>
-		<Layer>
-			<Rect config={{ width, height, x: 0, y: 0, fill: '#ffffff20' }} />
-		</Layer>
-		<Layer>
-			{#each $canvasElements as element}
-				{@const { config, type } = element}
-				{#if type === 'Text'}
-					<Group>
-						<Text config={{ ...(config ?? {}), draggable: true }} />
-					</Group>
-				{:else if type === 'Image'}
-					<Group>
-						<Image config={{ ...(config ?? {}), draggable: true }} />
-					</Group>
-				{/if}
-			{/each}
-			<Transformer bind:this={transformer} config={{ borderStroke: 'red', borderDash: [6, 2] }} />
-			<Rect config={selectionRectangleConfig} bind:handle={selectionRectangle} />
-		</Layer>
-	</Stage> -->
 	<Stage
-		on:pointerdown={selectStart}
-		on:pointermove={selectDrag}
-		on:pointerup={selectEnd}
-		on:mouseout={selectMouseOut}
+		on:mousedown={(e) => {
+			// If the user clicks on the stage, deselect all nodes
+			const konvaEvent = e.detail;
+
+			// Check if event target is stage (eg. user clicked on empty part of the stage and not any shape)
+			if (konvaEvent.target.getType() !== 'Stage') {
+				return;
+			}
+			transformer.nodes([]);
+		}}
 		bind:handle={stage}
 		config={{ width, height }}
 	>
 		<Layer bind:handle={layer}>
-			<!-- <Group config={{ draggable: true }}>
-				{#each configs as config}
-					<Circle bind:config />
-				{/each}
-			</Group>
-
-			<Rect config={{ x: 50, y: 50, width: 100, height: 100, fill: 'green', draggable: true }} />
-
-			<RegularPolygon
-				config={{ x: 400, y: 300, radius: 80, sides: 10, fill: 'purple', draggable: true }}
-			/> -->
 			<Rect
-				config={{ height: maskHeight, width: maskWidth, x: maskX, y: maskY, fill: '#000000' }}
+				config={{ height: maskHeight, width: maskWidth, x: maskX, y: maskY, fill: '#ffffff' }}
 			/>
 			{#each $canvasElements as element}
 				{@const { config, type, id } = element}
 				<Group
 					config={{ id }}
-					on:dragmove={() => transformer.nodes([layer.findOne(`#${id}`)])}
-					on:pointerdown={() => transformer.nodes([layer.findOne(`#${id}`)])}
+					on:dragmove={() => selectNode(id)}
+					on:pointerdown={() => selectNode(id)}
 				>
 					{#if type === 'Text'}
-						<Text config={{ ...(config ?? {}), draggable: true }} />
+						<Text config={{ ...(config ?? {}), draggable: true, y: height / 2, x: width / 2 }} />
 					{:else if type === 'Image'}
-						<Image config={{ ...(config ?? {}), draggable: true }} />
+						<Image config={{ ...(config ?? {}), draggable: true, y: height / 2, x: width / 2 }} />
 					{/if}
 				</Group>
 			{/each}
 		</Layer>
+		<CanvasMask {height} {width} {maskHeight} {maskWidth} {maskImage} {maskX} {maskY} />
 		<Layer>
-			<Rect config={{ x: 0, y: 0, width: (width - maskWidth) / 1.8, height, fill: '#ffffff' }} />
-			<Rect
-				config={{
-					x: maskWidth + maskX - 1,
-					y: 0,
-					width: (width - maskWidth) / 1.8,
-					height,
-					fill: '#ffffff'
-				}}
-			/>
-
-			{#if image}
-				<Image config={{ image, height: maskHeight, width: maskWidth, x: maskX, y: maskY }} />
-			{/if}
-		</Layer>
-		<Layer>
-			<!-- Position transformer and selection rectagle at the bottom of all components so they are always the topmost elements on the canvas -->
+			<!-- Position transformer and selection rectangle at the bottom of all components so they are always the topmost elements on the canvas -->
 			<Transformer config={{}} bind:handle={transformer} />
 		</Layer>
 	</Stage>
