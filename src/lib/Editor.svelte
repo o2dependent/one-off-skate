@@ -3,6 +3,7 @@
 	import { canvasElements } from '$stores/canvasElements';
 	import Canvas from './Canvas.svelte';
 	import EditorLayerButton from './EditorLayerButton.svelte';
+	import AddNewLayer from './AddNewLayer/AddNewLayer.svelte';
 
 	let activeTab: 'layers' | 'config' = 'layers';
 	let stage: Konva.Stage;
@@ -36,10 +37,9 @@
 		<div
 			class:rounded-tr-lg={activeTab === 'layers'}
 			class:rounded-tl-lg={activeTab === 'config'}
-			class="rounded-b-lg px-2 py-4 flex flex-col h-full bg-base-100 border border-base-200 gap-2"
+			class="overflow-hidden rounded-b-lg px-2 py-4 flex flex-col h-full bg-base-100 border border-base-200 gap-2"
 		>
-			<EditorLayerButton id="New" label="New" type="New" />
-			<div class="h-[1px] bg-base-content/10 w-full rounded-full" />
+			<AddNewLayer />
 			{#each $canvasElements as { label, id, type }}
 				<EditorLayerButton handleClick={() => focusElement(id)} bind:id bind:label bind:type />
 			{/each}

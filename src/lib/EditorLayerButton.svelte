@@ -4,24 +4,26 @@
 	import SvgAddIcon from './svgs/SvgAddIcon.svelte';
 	import SvgImageIcon from './svgs/SvgImageIcon.svelte';
 	import SvgTextIcon from './svgs/SvgTextIcon.svelte';
+	import SvgIcon from './svgs/SvgIcon.svelte';
 
 	export let type: CanvasElementType | 'New' = 'Image';
 	export let label = 'element';
 	export let id: string;
+	export let tooltip: string = '';
 
 	export let handleClick: () => void = () => {};
 </script>
 
-<button on:click={handleClick} type="button" class="btn btn-ghost">
+<button
+	on:click={handleClick}
+	type="button"
+	class="btn btn-ghost w-full"
+	class:tooltip
+	data-tip={tooltip}
+>
 	<div class="icon avatar">
 		<div class="rounded w-6">
-			{#if type === 'Image'}
-				<SvgImageIcon />
-			{:else if type === 'Text'}
-				<SvgTextIcon />
-			{:else if type === 'New'}
-				<SvgAddIcon />
-			{/if}
+			<SvgIcon {type} />
 		</div>
 	</div>
 	<p class="flex-grow">{label}</p>
