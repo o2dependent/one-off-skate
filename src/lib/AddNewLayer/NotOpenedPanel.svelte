@@ -3,8 +3,14 @@
 	import { fly } from 'svelte/transition';
 
 	export let open: boolean;
+	export let dir: -1 | 1;
 </script>
 
 <div class="absolute top-4 left-0 w-full" in:fly={{ x: -400 }} out:fly={{ x: -400 }}>
-	<EditorLayerButton handleClick={() => (open = true)} id="New" label="New" type="New" />
+	<EditorLayerButton
+		handleClick={() => ((open = true), (dir = 1))}
+		id="New"
+		label="New"
+		type="New"
+	/>
 </div>

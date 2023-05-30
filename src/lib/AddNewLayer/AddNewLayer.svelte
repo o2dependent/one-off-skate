@@ -7,19 +7,20 @@
 
 	let open = false;
 	let selected: CanvasElementType | undefined;
+	let dir: 1 | -1 = 1;
 </script>
 
 <div class="relative w-full h-20">
 	{#if open}
 		{#if !selected}
-			<SelectTypePanel bind:open bind:selected />
+			<SelectTypePanel bind:dir bind:open bind:selected />
 		{:else if selected === 'Text'}
-			<AddTextPanel bind:open bind:selected />
+			<AddTextPanel bind:dir bind:open bind:selected />
 		{:else if selected === 'Image'}
-			<AddImagePanel bind:open bind:selected />
+			<AddImagePanel bind:dir bind:open bind:selected />
 		{/if}
 	{:else}
-		<NotOpenedPanel bind:open />
+		<NotOpenedPanel bind:dir bind:open />
 	{/if}
 </div>
 <div class="h-[1px] bg-base-content/10 w-full rounded-full" />

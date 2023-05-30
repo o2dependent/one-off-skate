@@ -4,12 +4,17 @@
 
 	export let open: boolean;
 	export let selected: string | undefined;
+	export let dir: -1 | 1;
 </script>
 
-<div in:fly={{ x: 400 }} out:fly={{ x: 400 }} class="grid grid-cols-3 absolute top-4 left-0 w-full">
+<div
+	in:fly={{ x: 400 * dir }}
+	out:fly={{ x: 400 * dir }}
+	class="grid grid-cols-3 absolute top-4 left-0 w-full"
+>
 	<button
 		type="button"
-		on:click={() => ((selected = undefined), (open = false))}
+		on:click={() => ((selected = undefined), (open = false), (dir = 1))}
 		class="btn btn-ghost tooltip"
 		data-tip="Back"
 	>
@@ -17,7 +22,7 @@
 	</button>
 	<button
 		type="button"
-		on:click={() => (selected = 'Text')}
+		on:click={() => ((selected = 'Text'), (dir = -1))}
 		class="btn btn-ghost tooltip"
 		data-tip="Text"
 	>
@@ -25,7 +30,7 @@
 	</button>
 	<button
 		type="button"
-		on:click={() => (selected = 'Image')}
+		on:click={() => ((selected = 'Image'), (dir = -1))}
 		class="btn btn-ghost tooltip"
 		data-tip="Image"
 	>

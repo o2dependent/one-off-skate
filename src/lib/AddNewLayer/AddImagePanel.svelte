@@ -4,6 +4,7 @@
 
 	export let selected: string | undefined;
 	export let open: boolean;
+	export let dir: -1 | 1;
 
 	let image: File | undefined;
 
