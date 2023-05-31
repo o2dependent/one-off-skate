@@ -5,6 +5,7 @@
 	export let selected: string | undefined;
 	export let open: boolean;
 	export let dir: -1 | 1;
+	export let height: number;
 
 	let text = '';
 
@@ -19,24 +20,22 @@
 </script>
 
 <form
+	bind:clientHeight={height}
 	on:submit|preventDefault={createText}
 	in:fly={{ x: 400 }}
 	out:fly={{ x: 400 }}
-	class="grid grid-cols-3 absolute top-4 left-0 w-full"
+	class="absolute top-4 left-0 w-full"
 >
-	<div class="flex gap-2">
-		<button
-			type="button"
-			on:click={() => ((selected = undefined), (dir = -1))}
-			class="btn btn-ghost tooltip"
-			data-tip="Back"
-		>
+	<button
+		type="button"
+		on:click={() => ((selected = undefined), (dir = -1))}
+		class="btn btn-ghost tooltip flex items-center justify-center"
+		data-tip="Back"
+	>
+		<div class="w-6">
 			<SvgIcon type="Back" />
-		</button>
-		<button class="btn btn-ghost tooltip" data-tip="Add Text" type="submit">
-			<SvgIcon type="New" />
-		</button>
-	</div>
+		</div>
+	</button>
 	<div class="form-control w-full max-w-xs">
 		<label class="label" for="text">
 			<span class="label-text">Enter Text</span>
@@ -48,4 +47,9 @@
 			class="input input-bordered w-full max-w-xs"
 		/>
 	</div>
+	<button class="btn btn-ghost tooltip btn-block" data-tip="Add Text" type="submit">
+		<div class="w-6">
+			<SvgIcon type="New" />
+		</div>
+	</button>
 </form>

@@ -8,19 +8,20 @@
 	let open = false;
 	let selected: CanvasElementType | undefined;
 	let dir: 1 | -1 = 1;
+	let height = 0;
 </script>
 
-<div class="relative w-full h-20">
+<div class="relative w-full py-2 transition-all ease-in-out" style="height: {height + 32}px">
 	{#if open}
 		{#if !selected}
-			<SelectTypePanel bind:dir bind:open bind:selected />
+			<SelectTypePanel bind:height bind:dir bind:open bind:selected />
 		{:else if selected === 'Text'}
-			<AddTextPanel bind:dir bind:open bind:selected />
+			<AddTextPanel bind:height bind:dir bind:open bind:selected />
 		{:else if selected === 'Image'}
-			<AddImagePanel bind:dir bind:open bind:selected />
+			<AddImagePanel bind:height bind:dir bind:open bind:selected />
 		{/if}
 	{:else}
-		<NotOpenedPanel bind:dir bind:open />
+		<NotOpenedPanel bind:height bind:dir bind:open />
 	{/if}
 </div>
 <div class="h-[1px] bg-base-content/10 w-full rounded-full" />

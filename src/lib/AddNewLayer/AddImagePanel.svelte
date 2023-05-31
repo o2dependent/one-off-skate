@@ -5,6 +5,7 @@
 	export let selected: string | undefined;
 	export let open: boolean;
 	export let dir: -1 | 1;
+	export let height: number;
 
 	let image: File | undefined;
 
@@ -17,7 +18,12 @@
 	};
 </script>
 
-<div in:fly={{ x: 400 }} out:fly={{ x: 400 }} class="grid grid-cols-3 absolute top-4 left-0 w-full">
+<div
+	bind:clientHeight={height}
+	in:fly={{ x: 400 }}
+	out:fly={{ x: 400 }}
+	class="grid grid-cols-3 absolute top-4 left-0 w-full"
+>
 	<button
 		type="button"
 		on:click={() => (selected = undefined)}
