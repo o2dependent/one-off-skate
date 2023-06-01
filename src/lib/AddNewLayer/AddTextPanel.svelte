@@ -12,7 +12,6 @@
 
 	const createText = () => {
 		// add text to canvas elements
-		console.log(text);
 		addCanvasElement('Text', text, {
 			text,
 			x: ($stage?.width() ?? 0) / 2,
