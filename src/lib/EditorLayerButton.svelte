@@ -31,7 +31,8 @@
 
 <style lang="postcss">
 	.btn {
-		@apply flex gap-2 text-left normal-case;
+		grid-template-columns: auto 1fr;
+		@apply grid gap-2 text-left normal-case;
 	}
 	.btn .icon {
 		@apply grid place-items-center;
