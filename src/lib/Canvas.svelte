@@ -2,7 +2,7 @@
 	import { assets } from '$app/paths';
 	import type Konva from 'konva';
 	import { Stage, Layer, Text, Image, Rect, Group, Transformer } from 'svelte-konva';
-	import { canvasElements } from '$stores/canvasElements';
+	import { canvasElements, stage } from '$stores/canvasElements';
 	import { onMount } from 'svelte';
 	import { getRealPointerPos } from '$utils/getRealPointerPos';
 	import type { KonvaEventObject } from 'konva/lib/Node';
@@ -14,10 +14,6 @@
 	let stageContainer: HTMLDivElement;
 	let width = MAX_WIDTH_RESOLUTION;
 	let height = MAX_HEIGHT_RESOLUTION;
-
-	export let stage: Konva.Stage;
-	export let layer: Konva.Layer;
-	export let transformer: Konva.Transformer;
 
 	// Used to calculate the position and size of the selection rectangle during selection
 	let initialSelectionCoordinates: Konva.Vector2d = {
@@ -34,7 +30,9 @@
 
 	// resize
 	function handleResize() {
-		stage.pixelSize(10);
+		if (!$stage) {
+		}
+		$stage?.pixelSize(10);
 		width = stageContainer.clientWidth;
 		height = stageContainer.clientHeight;
 		// Scale the stage and its children to fit the container
