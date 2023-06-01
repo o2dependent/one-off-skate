@@ -59,7 +59,7 @@
 			class="input input-bordered w-full max-w-xs"
 		/>
 	</div>
-	<button class="btn btn-sm btn-ghost tooltip flex gap-2" data-tip="Add Text" type="submit">
+	<button class="btn btn-sm btn-ghost tooltip flex gap-2" type="submit">
 		<div class="w-6">
 			<SvgIcon type="New" />
 		</div>
