@@ -2,7 +2,7 @@
 	import { assets } from '$app/paths';
 	import type Konva from 'konva';
 	import { Stage, Layer, Text, Image, Rect, Group, Transformer } from 'svelte-konva';
-	import { canvasElements, stage } from '$stores/canvasElements';
+	import { canvasElements, layer, stage, transformer } from '$stores/canvasElements';
 	import { onMount } from 'svelte';
 	import { getRealPointerPos } from '$utils/getRealPointerPos';
 	import type { KonvaEventObject } from 'konva/lib/Node';
@@ -30,8 +30,7 @@
 
 	// resize
 	function handleResize() {
-		if (!$stage) {
-		}
+		if (!$stage) return;
 		$stage?.pixelSize(10);
 		width = stageContainer.clientWidth;
 		height = stageContainer.clientHeight;
@@ -47,11 +46,11 @@
 		const stageHeight = height * scale;
 		const offsetX = (containerWidth - stageWidth) / 2;
 		const offsetY = (containerHeight - stageHeight) / 2;
-		stage.offset({ x: offsetX, y: offsetY });
-		// stage.position({ x: offsetX, y: offsetY });
-		stage.scale({ x: scale, y: scale });
+		$stage?.offset({ x: offsetX, y: offsetY });
+		// $stage?.position({ x: offsetX, y: offsetY });
+		$stage?.scale({ x: scale, y: scale });
 
-		stage.batchDraw();
+		$stage?.batchDraw();
 	}
 	// mount
 	onMount(() => {
@@ -71,8 +70,9 @@
 	});
 
 	function selectNode(id: string) {
-		const node = layer.findOne(`#${id}`);
-		transformer.nodes([node]);
+		const node = $layer?.findOne(`#${id}`);
+		if (!node) return;
+		$transformer?.nodes([node]);
 	}
 
 	function dragMove(event: KonvaEventObject<DragEvent>) {
@@ -80,11 +80,11 @@
 		const nodes = [node];
 
 		// If the node is already selected, add the transformer to the nodes array
-		if (transformer.nodes().includes(node)) {
-			nodes.push(transformer);
+		if ($transformer?.nodes().includes(node)) {
+			nodes.push($transformer);
 		}
 
-		transformer.nodes(nodes);
+		$transformer?.nodes(nodes);
 	}
 </script>
 
@@ -101,12 +101,12 @@
 			if (konvaEvent.target.getType() !== 'Stage') {
 				return;
 			}
-			transformer.nodes([]);
+			$transformer?.nodes([]);
 		}}
-		bind:handle={stage}
+		bind:handle={$stage}
 		config={{ width, height }}
 	>
-		<Layer bind:handle={layer}>
+		<Layer bind:handle={$layer}>
 			<Rect
 				config={{ height: maskHeight, width: maskWidth, x: maskX, y: maskY, fill: '#ffffff' }}
 			/>
@@ -128,7 +128,7 @@
 		<CanvasMask {height} {width} {maskHeight} {maskWidth} {maskImage} {maskX} {maskY} />
 		<Layer>
 			<!-- Position transformer and selection rectangle at the bottom of all components so they are always the topmost elements on the canvas -->
-			<Transformer config={{}} bind:handle={transformer} />
+			<Transformer config={{}} bind:handle={$transformer} />
 		</Layer>
 	</Stage>
 </div>

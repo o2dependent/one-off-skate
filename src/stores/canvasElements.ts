@@ -6,9 +6,9 @@ import type {
 } from './canvasElementsTypes';
 import type Konva from 'konva';
 
-export const stage = writable<Konva.Stage | null>(null);
-export const layer = writable<Konva.Layer | null>(null);
-export const transformer = writable<Konva.Transformer | null>(null);
+export const stage = writable<Konva.Stage | undefined>(undefined);
+export const layer = writable<Konva.Layer | undefined>(undefined);
+export const transformer = writable<Konva.Transformer | undefined>(undefined);
 
 // SECTION: Canvas Elements Store
 // NOTE: store to hold and manage all canvas elements
