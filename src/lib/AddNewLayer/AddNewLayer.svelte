@@ -11,7 +11,10 @@
 	let height = 0;
 </script>
 
-<div class="relative w-full py-2 transition-all ease-in-out" style="height: {height + 32}px">
+<div
+	class="relative w-full py-2 transition-all ease-in-out"
+	style="height: {height + 32}px; will-change: height;"
+>
 	{#if open}
 		{#if !selected}
 			<SelectTypePanel bind:height bind:dir bind:open bind:selected />

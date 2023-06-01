@@ -24,32 +24,37 @@
 	on:submit|preventDefault={createText}
 	in:fly={{ x: 400 }}
 	out:fly={{ x: 400 }}
-	class="absolute top-4 left-0 w-full"
+	class="absolute top-4 left-0 w-full flex flex-col gap-2"
 >
-	<button
-		type="button"
-		on:click={() => ((selected = undefined), (dir = -1))}
-		class="btn btn-ghost tooltip flex items-center justify-center"
-		data-tip="Back"
-	>
-		<div class="w-6">
-			<SvgIcon type="Back" />
-		</div>
-	</button>
+	<div class="flex gap-2 items-center border-b border-base-300 pb-2">
+		<button
+			type="button"
+			on:click={() => ((selected = undefined), (dir = -1))}
+			class="btn btn-sm btn-ghost tooltip flex items-center justify-center w-fit"
+			data-tip="Back"
+		>
+			<div class="w-6">
+				<SvgIcon type="Back" />
+			</div>
+		</button>
+		<p class="flex-grow text-left font-semibold">Add Text</p>
+	</div>
 	<div class="form-control w-full max-w-xs">
 		<label class="label" for="text">
-			<span class="label-text">Enter Text</span>
+			<span class="label-text">Text</span>
+			<span class="label-text-alt text-error text-xs">Required *</span>
 		</label>
 		<input
 			name="text"
 			type="text"
-			placeholder="Type here"
+			placeholder="Enter Text..."
 			class="input input-bordered w-full max-w-xs"
 		/>
 	</div>
-	<button class="btn btn-ghost tooltip btn-block" data-tip="Add Text" type="submit">
+	<button class="btn btn-sm btn-ghost tooltip flex gap-2" data-tip="Add Text" type="submit">
 		<div class="w-6">
 			<SvgIcon type="New" />
 		</div>
+		<p class="flex-grow text-left">Add Text</p>
 	</button>
 </form>

@@ -23,7 +23,15 @@
 </script>
 
 <Layer config={{ listening: false }}>
-	<Rect config={{ x: 0, y: 0, width: (width - maskWidth) / 1.8, height, fill: '#ffffff' }} />
+	<Rect
+		config={{
+			x: 0,
+			y: 0,
+			width: (width - maskWidth) / 1.8,
+			height,
+			fill: '#ffffff'
+		}}
+	/>
 	<Rect
 		config={{
 			x: maskWidth + maskX - 1,
@@ -36,7 +44,13 @@
 
 	{#if maskImage}
 		<Image
-			config={{ image: maskImage, height: maskHeight, width: maskWidth, x: maskX, y: maskY }}
+			config={{
+				image: maskImage,
+				height: maskHeight,
+				width: maskWidth,
+				x: maskX,
+				y: maskY
+			}}
 		/>
 	{/if}
 </Layer>
