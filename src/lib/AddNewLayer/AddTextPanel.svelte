@@ -1,6 +1,7 @@
 <script lang="ts">
 	import SvgIcon from '$lib/svgs/SvgIcon.svelte';
 	import { fly } from 'svelte/transition';
+	import { addCanvasElement, stage } from '$stores/canvasElements';
 
 	export let selected: string | undefined;
 	export let open: boolean;
@@ -11,6 +12,13 @@
 
 	const createText = () => {
 		// add text to canvas elements
+		console.log(text);
+		addCanvasElement('Text', text, {
+			text,
+			x: ($stage?.width() ?? 0) / 2,
+			y: ($stage?.height() ?? 0) / 2,
+			fontSize: 24
+		});
 
 		// reset new layer component
 		open = false;
@@ -26,7 +34,7 @@
 	out:fly={{ x: 400 }}
 	class="absolute top-4 left-0 w-full flex flex-col gap-2"
 >
-	<div class="flex gap-2 items-center border-b border-base-300 pb-2">
+	<div class="flex gap-2 items-center border-b border-base-content/10 pb-2">
 		<button
 			type="button"
 			on:click={() => ((selected = undefined), (dir = -1))}
@@ -45,6 +53,7 @@
 			<span class="label-text-alt text-error text-xs">Required *</span>
 		</label>
 		<input
+			bind:value={text}
 			name="text"
 			type="text"
 			placeholder="Enter Text..."
