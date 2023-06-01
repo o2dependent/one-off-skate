@@ -27,4 +27,4 @@
 		<NotOpenedPanel bind:height bind:dir bind:open />
 	{/if}
 </div>
-<div class="h-[1px] bg-base-content/10 w-full rounded-full" />
+<div class="h-[1px] bg-base-content/25 w-full rounded-full" />
