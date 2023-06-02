@@ -4,10 +4,14 @@
 	import SvgBackIcon from './SvgBackIcon.svelte';
 	import SvgBugIcon from './SvgBugIcon.svelte';
 	import SvgCloseIcon from './SvgCloseIcon.svelte';
+	import SvgDownIcon from './SvgDownIcon.svelte';
 	import SvgImageIcon from './SvgImageIcon.svelte';
 	import SvgTextIcon from './SvgTextIcon.svelte';
+	import SvgUpIcon from './SvgUpIcon.svelte';
 
-	export let type: CanvasElementType | 'New' | 'Close' | 'Back' | 'Bug' = 'Image';
+	type IconType = 'New' | 'Close' | 'Back' | 'Bug' | 'Up' | 'Down';
+
+	export let type: CanvasElementType | IconType = 'Image';
 </script>
 
 {#if type === 'Image'}
@@ -22,4 +26,8 @@
 	<SvgBackIcon />
 {:else if type === 'Bug'}
 	<SvgBugIcon />
+{:else if type === 'Up'}
+	<SvgUpIcon />
+{:else if type === 'Down'}
+	<SvgDownIcon />
 {/if}
