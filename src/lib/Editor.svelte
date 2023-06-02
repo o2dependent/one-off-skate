@@ -1,26 +1,15 @@
 <script lang="ts">
 	import type Konva from 'konva';
-	import { canvasElements } from '$stores/canvasElements';
+	import { canvasElements, focusElement, layer, stage, transformer } from '$stores/canvasElements';
 	import Canvas from './Canvas.svelte';
 	import EditorLayerButton from './EditorLayerButton.svelte';
 	import AddNewLayer from './AddNewLayer/AddNewLayer.svelte';
 
 	let activeTab: 'layers' | 'config' = 'layers';
-	let stage: Konva.Stage;
-	let layer: Konva.Layer;
-	let transformer: Konva.Transformer;
-
-	const focusElement = (id: string) => {
-		const element = stage.findOne(`#${id}`);
-		if (element) {
-			transformer.nodes([element]);
-			layer.batchDraw();
-		}
-	};
 </script>
 
 <div class="w-full h-full container mx-auto flex gap-4 p-4">
-	<Canvas bind:layer bind:transformer bind:stage />
+	<Canvas />
 	<div class="flex flex-col gap-0 h-full w-72">
 		<div class="tabs tab-border w-full flex -mb-[1px] border-b-0">
 			<button
@@ -40,8 +29,13 @@
 			class="overflow-hidden rounded-b-lg px-2 py-4 flex flex-col h-full bg-base-100 border border-base-200 gap-2"
 		>
 			<AddNewLayer />
-			{#each $canvasElements as { label, id, type }}
-				<EditorLayerButton handleClick={() => focusElement(id)} bind:id bind:label bind:type />
+			{#each $canvasElements as { label, type, config: { id } }}
+				<EditorLayerButton
+					handleClick={() => id && focusElement(id)}
+					bind:id
+					bind:label
+					bind:type
+				/>
 			{/each}
 		</div>
 	</div>

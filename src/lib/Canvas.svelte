@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { assets } from '$app/paths';
 	import type Konva from 'konva';
-	import { Stage, Layer, Text, Image, Rect, Group, Transformer } from 'svelte-konva';
-	import { canvasElements, layer, stage, transformer } from '$stores/canvasElements';
+	import { Stage, Layer, Text, Image, Rect, Transformer } from 'svelte-konva';
+	import { canvasElements, focusElement, layer, stage, transformer } from '$stores/canvasElements';
 	import { onMount } from 'svelte';
-	import { getRealPointerPos } from '$utils/getRealPointerPos';
 	import type { KonvaEventObject } from 'konva/lib/Node';
 	import CanvasMask from './CanvasMask.svelte';
 
@@ -111,18 +110,33 @@
 				config={{ height: maskHeight, width: maskWidth, x: maskX, y: maskY, fill: '#ffffff' }}
 			/>
 			{#each $canvasElements as element}
-				{@const { config, type, id } = element}
-				<Group
-					config={{ id }}
-					on:dragmove={() => selectNode(id)}
-					on:pointerdown={() => selectNode(id)}
-				>
-					{#if type === 'Text'}
-						<Text config={{ ...(config ?? {}), draggable: true, y: height / 2, x: width / 2 }} />
-					{:else if type === 'Image'}
-						<Image config={{ ...(config ?? {}), draggable: true, y: height / 2, x: width / 2 }} />
-					{/if}
-				</Group>
+				{@const {
+					type,
+					config: { id }
+				} = element}
+
+				{#if typeof id === 'undefined'}
+					<Text
+						config={{
+							text: 'An\nerror\noccured!',
+							fontSize: 32,
+							x: ($stage?.width?.() ?? 0) / 2 - 64,
+							y: ($stage?.height?.() ?? 0) / 2
+						}}
+					/>
+				{:else if type === 'Text'}
+					<Text
+						on:dragmove={() => focusElement(id)}
+						on:pointerdown={() => focusElement(id)}
+						bind:config={element.config}
+					/>
+				{:else if type === 'Image'}
+					<Image
+						on:dragmove={() => focusElement(id)}
+						on:pointerdown={() => focusElement(id)}
+						bind:config={element.config}
+					/>
+				{/if}
 			{/each}
 		</Layer>
 		<CanvasMask {height} {width} {maskHeight} {maskWidth} {maskImage} {maskX} {maskY} />

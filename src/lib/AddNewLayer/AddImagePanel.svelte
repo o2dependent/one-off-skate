@@ -42,9 +42,13 @@
 	};
 
 	const createImage = () => {
+		if (!image) return;
+		const aspectRatio = image.naturalWidth / image.naturalHeight;
 		// add text to canvas elements
 		addCanvasElement('Image', file?.name ?? 'Image', {
 			image,
+			width: 200,
+			height: 200 / aspectRatio,
 			x: ($stage?.width() ?? 0) / 2,
 			y: ($stage?.height() ?? 0) / 2,
 			fontSize: 24
@@ -99,11 +103,12 @@
 				bind:files
 				name="image"
 				type="file"
+				accept="image/*"
 				class="cursor-pointer z-10 opacity-0 absolute w-full h-full"
 			/>
 		</div>
 	</div>
-	<button class="btn btn-sm btn-ghost tooltip flex gap-2" type="submit">
+	<button disabled={!src} class="btn btn-sm btn-ghost tooltip flex gap-2" type="submit">
 		<div class="w-6">
 			<SvgIcon type="New" />
 		</div>

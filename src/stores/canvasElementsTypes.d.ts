@@ -1,4 +1,3 @@
-import type { Image, Text } from 'svelte-konva';
 import type Konva from 'konva';
 // SECTION: Util types
 
@@ -25,7 +24,6 @@ export type CanvasElementType = keyof CanvasElementConfigMap;
 
 // NOTE: config type for each element
 export interface CanvasElement<Type extends CanvasElementType> {
-	id: string;
 	label: string;
 	type: Type;
 	config: CanvasElementConfigMap[Type];
