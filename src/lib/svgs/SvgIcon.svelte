@@ -3,13 +3,23 @@
 	import SvgAddIcon from './SvgAddIcon.svelte';
 	import SvgBackIcon from './SvgBackIcon.svelte';
 	import SvgBugIcon from './SvgBugIcon.svelte';
+	import SvgCenterHorizonalIcon from './SvgCenterHorizonalIcon.svelte';
+	import SvgCenterVerticalIcon from './SvgCenterVerticalIcon.svelte';
 	import SvgCloseIcon from './SvgCloseIcon.svelte';
 	import SvgDownIcon from './SvgDownIcon.svelte';
 	import SvgImageIcon from './SvgImageIcon.svelte';
 	import SvgTextIcon from './SvgTextIcon.svelte';
 	import SvgUpIcon from './SvgUpIcon.svelte';
 
-	type IconType = 'New' | 'Close' | 'Back' | 'Bug' | 'Up' | 'Down';
+	type IconType =
+		| 'New'
+		| 'Close'
+		| 'Back'
+		| 'Bug'
+		| 'Up'
+		| 'Down'
+		| 'CenterHorizonal'
+		| 'CenterVertical';
 
 	export let type: CanvasElementType | IconType = 'Image';
 </script>
@@ -30,4 +40,8 @@
 	<SvgUpIcon />
 {:else if type === 'Down'}
 	<SvgDownIcon />
+{:else if type === 'CenterHorizonal'}
+	<SvgCenterHorizonalIcon />
+{:else if type === 'CenterVertical'}
+	<SvgCenterVerticalIcon />
 {/if}
