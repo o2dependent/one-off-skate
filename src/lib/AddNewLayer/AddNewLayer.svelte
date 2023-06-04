@@ -11,20 +11,22 @@
 	let height = 0;
 </script>
 
-<div
-	class="relative w-full py-2 transition-all ease-in-out"
-	style="height: {height + 32}px; will-change: height;"
->
-	{#if open}
-		{#if !selected}
-			<SelectTypePanel bind:height bind:dir bind:open bind:selected />
-		{:else if selected === 'Text'}
-			<AddTextPanel bind:height bind:dir bind:open bind:selected />
-		{:else if selected === 'Image'}
-			<AddImagePanel bind:height bind:dir bind:open bind:selected />
+<div class="pt-6 px-2 overflow-hidden">
+	<div
+		class="relative w-full py-2 transition-all ease-in-out"
+		style="height: {height + 32}px; will-change: height;"
+	>
+		{#if open}
+			{#if !selected}
+				<SelectTypePanel bind:height bind:dir bind:open bind:selected />
+			{:else if selected === 'Text'}
+				<AddTextPanel bind:height bind:dir bind:open bind:selected />
+			{:else if selected === 'Image'}
+				<AddImagePanel bind:height bind:dir bind:open bind:selected />
+			{/if}
+		{:else}
+			<NotOpenedPanel bind:height bind:dir bind:open />
 		{/if}
-	{:else}
-		<NotOpenedPanel bind:height bind:dir bind:open />
-	{/if}
+	</div>
 </div>
-<div class="h-[1px] bg-base-content/25 w-full rounded-full" />
+<div class="h-[1px] bg-base-content/25 mx-2 rounded-full" />

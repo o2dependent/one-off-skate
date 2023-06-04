@@ -1,13 +1,15 @@
 <script lang="ts">
 	import { selectedId } from '$stores/canvasElements';
-	import type { CanvasElementType } from '$stores/canvasElementsTypes';
+	import type { CanvasElementConfigMap, CanvasElementType } from '$stores/canvasElementsTypes';
 	import { slide } from 'svelte/transition';
 	import SvgIcon from './svgs/SvgIcon.svelte';
+	import EditElementConfig from './EditElementConfig/EditElementConfig.svelte';
 
 	export let type: CanvasElementType | 'New' = 'Image';
 	export let label = 'element';
 	export let id: string | undefined;
 	export let tooltip: string = '';
+	export let config: CanvasElementConfigMap[CanvasElementType] | undefined;
 
 	export let handleClick: () => void = () => {};
 
@@ -16,7 +18,7 @@
 
 <div>
 	<button
-		on:click={typeof id !== 'undefined' ? handleClick : () => {}}
+		on:click={handleClick}
 		type="button"
 		class="editor-btn btn btn-ghost w-full"
 		class:btn-active={selected}
@@ -31,12 +33,43 @@
 		<p class="flex-grow">{typeof id === 'undefined' ? 'An error occured!' : label}</p>
 	</button>
 	{#if selected}
-		<div in:slide out:slide class="pl-2 pt-2 flex flex-col gap-1">
-			<div class="rounded-md bg-base-content/10 px-1 py-2">
-				<button class="btn btn-sm btn-ghost p-2 w-fit flex items-center justify-center">
-					<SvgIcon type="Back" />
-				</button>
+		<div in:slide out:slide class="pl-4 pt-2 flex flex-col gap-2">
+			<!-- SECTION: Tools -->
+			<div class="flex gap-2 w-full">
+				<div class="rounded-md bg-base-content/10 px-2 py-2 h-fit w-fit flex gap-2">
+					<button
+						class="btn btn-sm btn-ghost p-1.5 w-fit flex items-center justify-center tooltip"
+						data-tip="Move Up"
+					>
+						<SvgIcon type="Up" />
+					</button>
+					<button
+						class="btn btn-sm btn-ghost p-1.5 w-fit flex items-center justify-center tooltip"
+						data-tip="Move Down"
+					>
+						<SvgIcon type="Down" />
+					</button>
+				</div>
+				<div class="rounded-md bg-base-content/10 px-2 py-2 h-fit w-fit flex gap-2">
+					<button
+						class="btn btn-sm btn-ghost p-1.5 w-fit flex items-center justify-center tooltip"
+						data-tip="Center Horizonal"
+					>
+						<SvgIcon type="CenterHorizonal" />
+					</button>
+					<button
+						class="btn btn-sm btn-ghost p-1.5 w-fit flex items-center justify-center tooltip"
+						data-tip="Center Vertical"
+					>
+						<SvgIcon type="CenterVertical" />
+					</button>
+				</div>
 			</div>
+			<!-- !SECTION -->
+			<!-- SECTION: Edit panel -->
+			{#if config}
+				<EditElementConfig bind:config bind:type bind:label />
+			{/if}
 		</div>
 	{/if}
 </div>

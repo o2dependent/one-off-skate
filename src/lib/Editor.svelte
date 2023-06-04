@@ -6,6 +6,8 @@
 	import AddNewLayer from './AddNewLayer/AddNewLayer.svelte';
 
 	let activeTab: 'layers' | 'config' = 'layers';
+
+	$: console.log($canvasElements);
 </script>
 
 <div class="w-full h-full container mx-auto flex gap-4 p-4">
@@ -26,17 +28,20 @@
 		<div
 			class:rounded-tr-lg={activeTab === 'layers'}
 			class:rounded-tl-lg={activeTab === 'config'}
-			class="overflow-hidden rounded-b-lg px-2 py-4 flex flex-col h-full bg-base-100 border border-base-200 gap-2"
+			class="rounded-b-lg pb-4 flex flex-col h-full bg-base-100 border border-base-200 gap-2"
 		>
 			<AddNewLayer />
-			{#each $canvasElements as { label, type, config: { id } }}
-				<EditorLayerButton
-					handleClick={() => id && focusElement(id)}
-					bind:id
-					bind:label
-					bind:type
-				/>
-			{/each}
+			<div class="px-2 flex flex-col gap-2">
+				{#each $canvasElements as { label, type, config }}
+					<EditorLayerButton
+						handleClick={() => config.id && focusElement(config.id)}
+						bind:id={config.id}
+						bind:label
+						bind:type
+						bind:config
+					/>
+				{/each}
+			</div>
 		</div>
 	</div>
 </div>

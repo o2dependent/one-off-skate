@@ -2,6 +2,7 @@
 	import SvgIcon from '$lib/svgs/SvgIcon.svelte';
 	import { fly } from 'svelte/transition';
 	import { addCanvasElement, stage } from '$stores/canvasElements';
+	import TextConfigInput from '$lib/ConfigInputs/TextConfigInput.svelte';
 
 	export let selected: string | undefined;
 	export let open: boolean;
@@ -46,19 +47,7 @@
 		</button>
 		<p class="flex-grow text-left font-semibold">Add Text</p>
 	</div>
-	<div class="form-control w-full max-w-xs">
-		<label class="label" for="text">
-			<span class="label-text">Text</span>
-			<span class="label-text-alt text-error text-xs">Required *</span>
-		</label>
-		<input
-			bind:value={text}
-			name="text"
-			type="text"
-			placeholder="Enter Text..."
-			class="input input-bordered w-full max-w-xs"
-		/>
-	</div>
+	<TextConfigInput bind:text />
 	<button class="btn btn-sm btn-ghost tooltip flex gap-2" type="submit">
 		<div class="w-6">
 			<SvgIcon type="New" />
