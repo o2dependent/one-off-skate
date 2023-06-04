@@ -10,6 +10,7 @@ export const stage = writable<Konva.Stage | undefined>(undefined);
 export const layer = writable<Konva.Layer | undefined>(undefined);
 export const transformer = writable<Konva.Transformer | undefined>(undefined);
 export const selectedId = writable<string | undefined>(undefined);
+export const backgroundFill = writable<string | undefined>('#ffffff');
 
 export const unfocusElement = () => {
 	const $transformer = get(transformer);

@@ -2,7 +2,14 @@
 	import { assets } from '$app/paths';
 	import type Konva from 'konva';
 	import { Stage, Layer, Text, Image, Rect, Transformer } from 'svelte-konva';
-	import { canvasElements, focusElement, layer, stage, transformer } from '$stores/canvasElements';
+	import {
+		canvasElements,
+		focusElement,
+		layer,
+		stage,
+		transformer,
+		backgroundFill
+	} from '$stores/canvasElements';
 	import { onMount } from 'svelte';
 	import type { KonvaEventObject } from 'konva/lib/Node';
 	import CanvasMask from './CanvasMask.svelte';
@@ -107,7 +114,7 @@
 	>
 		<Layer bind:handle={$layer}>
 			<Rect
-				config={{ height: maskHeight, width: maskWidth, x: maskX, y: maskY, fill: '#ffffff' }}
+				config={{ height: maskHeight, width: maskWidth, x: maskX, y: maskY, fill: $backgroundFill }}
 			/>
 			{#each $canvasElements as element}
 				{@const {

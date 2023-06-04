@@ -4,6 +4,7 @@
 	import Canvas from './Canvas.svelte';
 	import EditorLayerButton from './EditorLayerButton.svelte';
 	import AddNewLayer from './AddNewLayer/AddNewLayer.svelte';
+	import CanvasColorInput from './CanvasColorInput.svelte';
 
 	let activeTab: 'layers' | 'config' = 'layers';
 
@@ -31,6 +32,7 @@
 			class="rounded-b-lg pb-4 flex flex-col h-full bg-base-100 border border-base-200 gap-2"
 		>
 			<AddNewLayer />
+			<CanvasColorInput />
 			<div class="px-2 flex flex-col gap-2">
 				{#each $canvasElements as { label, type, config }}
 					<EditorLayerButton
