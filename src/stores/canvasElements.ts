@@ -51,8 +51,8 @@ export const createCanvasElement = <Type extends CanvasElementType>(
 		type,
 		label,
 		config: {
-			id,
 			...config,
+			id,
 			draggable: true
 		}
 	};
