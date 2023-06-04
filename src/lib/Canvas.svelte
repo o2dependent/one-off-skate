@@ -21,12 +21,6 @@
 	let width = MAX_WIDTH_RESOLUTION;
 	let height = MAX_HEIGHT_RESOLUTION;
 
-	// Used to calculate the position and size of the selection rectangle during selection
-	let initialSelectionCoordinates: Konva.Vector2d = {
-		x: 0,
-		y: 0
-	};
-
 	// Mask image
 	let maskImage: HTMLImageElement | undefined;
 	$: [maskHeight, maskWidth] = maskImage
