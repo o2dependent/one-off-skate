@@ -6,6 +6,7 @@
 	$: $backgroundFill = value;
 </script>
 
+<h2 class="mx-2 font-medium">Background Color</h2>
 <div
 	class="relative mx-2 rounded-md border border-base-content/20 h-8"
 	style="background-color: {value}"

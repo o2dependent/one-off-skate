@@ -33,6 +33,7 @@
 		>
 			<AddNewLayer />
 			<CanvasColorInput />
+			<h2 class="mx-2 font-medium">Layers</h2>
 			<div class="px-2 flex flex-col gap-2">
 				{#each $canvasElements as { label, type, config }}
 					<EditorLayerButton
@@ -42,6 +43,28 @@
 						bind:type
 						bind:config
 					/>
+				{:else}
+					<div class="flex flex-col h-full w-full items-center justify-center">
+						<p class="text-center pt-2">No Layers!</p>
+						<div class="w-24">
+							<svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+								<circle fill="currentColor" cx="184" cy="232" r="24" />
+								<path
+									fill="currentColor"
+									d="M256 288c45.42 0 83.62 29.53 95.71 69.83a8 8 0 01-7.87 10.17H168.15a8 8 0 01-7.82-10.17C172.32 317.53 210.53 288 256 288z"
+								/>
+								<circle fill="currentColor" cx="328" cy="232" r="24" /><circle
+									cx="256"
+									cy="256"
+									r="208"
+									fill="none"
+									stroke="currentColor"
+									stroke-miterlimit="10"
+									stroke-width="32"
+								/>
+							</svg>
+						</div>
+					</div>
 				{/each}
 			</div>
 		</div>
