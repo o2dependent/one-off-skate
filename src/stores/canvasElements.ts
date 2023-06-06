@@ -42,6 +42,12 @@ export const focusElement = (id: string) => {
 export const canvasElements = writable<CanvasElement<CanvasElementType>[]>([]);
 
 // NOTE: create a new canvas element with a random id
+const CONFIG_DEFAULTS = {
+	rotation: 0,
+	scaleX: 2.0011246837716055,
+	scaleY: 2.001124683771605,
+	draggable: true
+};
 export const createCanvasElement = <Type extends CanvasElementType>(
 	type: Type,
 	label: string,
@@ -52,9 +58,9 @@ export const createCanvasElement = <Type extends CanvasElementType>(
 		type,
 		label,
 		config: {
+			...CONFIG_DEFAULTS,
 			...config,
-			id,
-			draggable: true
+			id
 		}
 	};
 };

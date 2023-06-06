@@ -13,6 +13,7 @@
 	import { onMount } from 'svelte';
 	import type { KonvaEventObject } from 'konva/lib/Node';
 	import CanvasMask from './CanvasMask.svelte';
+	import { reverse } from 'lodash';
 
 	const MAX_WIDTH_RESOLUTION = 2486;
 	const MAX_HEIGHT_RESOLUTION = 10000;
@@ -110,7 +111,7 @@
 			<Rect
 				config={{ height: maskHeight, width: maskWidth, x: maskX, y: maskY, fill: $backgroundFill }}
 			/>
-			{#each $canvasElements as element}
+			{#each $canvasElements as element, idx (`${idx}-${element.config.id}`)}
 				{@const {
 					type,
 					config: { id }

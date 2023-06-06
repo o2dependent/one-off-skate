@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { selectedId } from '$stores/canvasElements';
+	import { canvasElements, selectedId } from '$stores/canvasElements';
 	import type { CanvasElementConfigMap, CanvasElementType } from '$stores/canvasElementsTypes';
 	import { slide } from 'svelte/transition';
 	import SvgIcon from './svgs/SvgIcon.svelte';
@@ -10,10 +10,28 @@
 	export let id: string | undefined;
 	export let tooltip: string = '';
 	export let config: CanvasElementConfigMap[CanvasElementType] | undefined;
+	export let idx: number | undefined;
 
 	export let handleClick: () => void = () => {};
 
 	$: selected = $selectedId === id;
+
+	const moveUp = () => {
+		if (typeof idx === 'undefined') return;
+		// shift element up
+		const newEls = [...$canvasElements];
+		newEls.splice(idx, 1);
+		newEls.splice(idx - 1, 0, $canvasElements[idx]);
+		$canvasElements = newEls;
+	};
+	const moveDown = () => {
+		if (typeof idx === 'undefined') return;
+		// shift element down
+		const newEls = [...$canvasElements];
+		newEls.splice(idx, 1);
+		newEls.splice(idx + 1, 0, $canvasElements[idx]);
+		$canvasElements = newEls;
+	};
 </script>
 
 <div>
@@ -38,26 +56,32 @@
 			<div class="flex gap-2 w-full">
 				<div class="rounded-md bg-base-content/10 px-2 py-2 h-fit w-fit flex gap-2">
 					<button
+						type="button"
 						class="btn btn-sm btn-ghost p-1.5 w-fit flex items-center justify-center tooltip"
 						data-tip="Move Up"
+						on:click={moveUp}
 					>
 						<SvgIcon type="Up" />
 					</button>
 					<button
+						type="button"
 						class="btn btn-sm btn-ghost p-1.5 w-fit flex items-center justify-center tooltip"
 						data-tip="Move Down"
+						on:click={moveDown}
 					>
 						<SvgIcon type="Down" />
 					</button>
 				</div>
 				<div class="rounded-md bg-base-content/10 px-2 py-2 h-fit w-fit flex gap-2">
 					<button
+						type="button"
 						class="btn btn-sm btn-ghost p-1.5 w-fit flex items-center justify-center tooltip"
 						data-tip="Center Horizonal"
 					>
 						<SvgIcon type="CenterHorizonal" />
 					</button>
 					<button
+						type="button"
 						class="btn btn-sm btn-ghost p-1.5 w-fit flex items-center justify-center tooltip"
 						data-tip="Center Vertical"
 					>

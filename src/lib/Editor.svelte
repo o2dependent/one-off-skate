@@ -35,13 +35,14 @@
 			<CanvasColorInput />
 			<h2 class="mx-2 font-medium">Layers</h2>
 			<div class="px-2 flex flex-col gap-2">
-				{#each $canvasElements as { label, type, config }}
+				{#each $canvasElements as { label, type, config }, idx}
 					<EditorLayerButton
 						handleClick={() => config.id && focusElement(config.id)}
 						bind:id={config.id}
 						bind:label
 						bind:type
 						bind:config
+						{idx}
 					/>
 				{:else}
 					<div class="flex flex-col h-full w-full items-center justify-center">
