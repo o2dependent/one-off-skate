@@ -10,6 +10,7 @@
 	export let height: number;
 
 	let text = '';
+	let fill = '#ffffff';
 
 	const createText = () => {
 		// add text to canvas elements
@@ -17,7 +18,8 @@
 			text,
 			x: ($stage?.width() ?? 0) / 2,
 			y: ($stage?.height() ?? 0) / 2,
-			fontSize: 24
+			fontSize: 24,
+			fill
 		});
 
 		// reset new layer component
@@ -47,7 +49,7 @@
 		</button>
 		<p class="flex-grow text-left font-semibold">Add Text</p>
 	</div>
-	<TextConfigInput bind:text />
+	<TextConfigInput bind:text bind:fill />
 	<button class="btn btn-sm btn-ghost tooltip flex gap-2" type="submit">
 		<div class="w-6">
 			<SvgIcon type="New" />
