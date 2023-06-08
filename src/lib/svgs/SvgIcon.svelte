@@ -9,6 +9,7 @@
 	import SvgDownIcon from './SvgDownIcon.svelte';
 	import SvgImageIcon from './SvgImageIcon.svelte';
 	import SvgTextIcon from './SvgTextIcon.svelte';
+	import SvgTrashIcon from './SvgTrashIcon.svelte';
 	import SvgUpIcon from './SvgUpIcon.svelte';
 
 	type IconType =
@@ -19,7 +20,8 @@
 		| 'Up'
 		| 'Down'
 		| 'CenterHorizonal'
-		| 'CenterVertical';
+		| 'CenterVertical'
+		| 'Trash';
 
 	export let type: CanvasElementType | IconType = 'Image';
 </script>
@@ -44,4 +46,6 @@
 	<SvgCenterHorizonalIcon />
 {:else if type === 'CenterVertical'}
 	<SvgCenterVerticalIcon />
+{:else if type === 'Trash'}
+	<SvgTrashIcon />
 {/if}

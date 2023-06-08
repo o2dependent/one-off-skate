@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { canvasElements, selectedId, stage } from '$stores/canvasElements';
+	import { canvasElements, selectedId, stage, transformer } from '$stores/canvasElements';
 	import type { CanvasElementConfigMap, CanvasElementType } from '$stores/canvasElementsTypes';
 	import { slide } from 'svelte/transition';
 	import SvgIcon from './svgs/SvgIcon.svelte';
@@ -47,6 +47,16 @@
 			config = { ...config, x: stageW / 2 - w / 2 };
 		}
 	};
+	const deleteElement = () => {
+		if (typeof idx === 'undefined') return;
+		// delete element
+		const newEls = [...$canvasElements];
+		newEls.splice(idx, 1);
+		$canvasElements = newEls;
+		// deselect element
+		$selectedId = undefined;
+		$transformer?.nodes([]);
+	};
 </script>
 
 <div>
@@ -66,7 +76,7 @@
 		<p class="flex-grow">{typeof id === 'undefined' ? 'An error occured!' : label}</p>
 	</button>
 	{#if selected}
-		<div in:slide out:slide class="pl-4 pt-2 flex flex-col gap-2">
+		<div in:slide out:slide class="pt-2 flex flex-col gap-2">
 			<!-- SECTION: Tools -->
 			<div class="grid grid-cols-2 gap-2 w-full">
 				<div
@@ -109,6 +119,18 @@
 						data-tip="Center Vertical"
 					>
 						<SvgIcon type="CenterVertical" />
+					</button>
+				</div>
+				<div
+					class="rounded-md bg-base-content/10 px-2 py-2 h-fit w-fit items-center justify-center flex gap-2 bg-error text-error-content"
+				>
+					<button
+						on:click={deleteElement}
+						type="button"
+						class="btn btn-sm btn-ghost p-1.5 w-fit flex items-center justify-center tooltip"
+						data-tip="Center Vertical"
+					>
+						<SvgIcon type="Trash" />
 					</button>
 				</div>
 			</div>
