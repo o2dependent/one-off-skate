@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { canvasElements, selectedId } from '$stores/canvasElements';
+	import { canvasElements, selectedId, stage } from '$stores/canvasElements';
 	import type { CanvasElementConfigMap, CanvasElementType } from '$stores/canvasElementsTypes';
 	import { slide } from 'svelte/transition';
 	import SvgIcon from './svgs/SvgIcon.svelte';
@@ -32,6 +32,21 @@
 		newEls.splice(idx + 1, 0, $canvasElements[idx]);
 		$canvasElements = newEls;
 	};
+	const onCenterElement = (axis: 'horizontal' | 'vertical') => () => {
+		if (!axis) return;
+		const [stageW, stageH] = [$stage?.width(), $stage?.height()];
+		const el = $stage?.findOne(`#${id}`);
+		const [w, h] = [
+			(el?.width() ?? 1) * (el?.scaleX() ?? 1),
+			(el?.height() ?? 1) * (el?.scaleY() ?? 1)
+		];
+		if (!stageW || !stageH || !w || !h) return;
+		if (axis === 'horizontal') {
+			config = { ...config, y: stageH / 2 - h / 2 };
+		} else {
+			config = { ...config, x: stageW / 2 - w / 2 };
+		}
+	};
 </script>
 
 <div>
@@ -53,13 +68,16 @@
 	{#if selected}
 		<div in:slide out:slide class="pl-4 pt-2 flex flex-col gap-2">
 			<!-- SECTION: Tools -->
-			<div class="flex gap-2 w-full">
-				<div class="rounded-md bg-base-content/10 px-2 py-2 h-fit w-fit flex gap-2">
+			<div class="grid grid-cols-2 gap-2 w-full">
+				<div
+					class="rounded-md bg-base-content/10 px-2 py-2 h-fit w-fit items-center justify-center flex gap-2"
+				>
 					<button
 						type="button"
 						class="btn btn-sm btn-ghost p-1.5 w-fit flex items-center justify-center tooltip"
 						data-tip="Move Up"
 						on:click={moveUp}
+						disabled={idx === 0}
 					>
 						<SvgIcon type="Up" />
 					</button>
@@ -68,12 +86,16 @@
 						class="btn btn-sm btn-ghost p-1.5 w-fit flex items-center justify-center tooltip"
 						data-tip="Move Down"
 						on:click={moveDown}
+						disabled={idx === $canvasElements.length - 1}
 					>
 						<SvgIcon type="Down" />
 					</button>
 				</div>
-				<div class="rounded-md bg-base-content/10 px-2 py-2 h-fit w-fit flex gap-2">
+				<div
+					class="rounded-md bg-base-content/10 px-2 py-2 h-fit w-fit items-center justify-center flex gap-2"
+				>
 					<button
+						on:click={onCenterElement('horizontal')}
 						type="button"
 						class="btn btn-sm btn-ghost p-1.5 w-fit flex items-center justify-center tooltip"
 						data-tip="Center Horizonal"
@@ -81,6 +103,7 @@
 						<SvgIcon type="CenterHorizonal" />
 					</button>
 					<button
+						on:click={onCenterElement('vertical')}
 						type="button"
 						class="btn btn-sm btn-ghost p-1.5 w-fit flex items-center justify-center tooltip"
 						data-tip="Center Vertical"

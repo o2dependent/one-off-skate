@@ -111,7 +111,7 @@
 			<Rect
 				config={{ height: maskHeight, width: maskWidth, x: maskX, y: maskY, fill: $backgroundFill }}
 			/>
-			{#each $canvasElements as element, idx (`${idx}-${element.config.id}`)}
+			{#each [...$canvasElements].reverse() as element, idx}
 				{@const {
 					type,
 					config: { id }

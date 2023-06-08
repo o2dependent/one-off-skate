@@ -44,8 +44,8 @@ export const canvasElements = writable<CanvasElement<CanvasElementType>[]>([]);
 // NOTE: create a new canvas element with a random id
 const CONFIG_DEFAULTS = {
 	rotation: 0,
-	scaleX: 2.0011246837716055,
-	scaleY: 2.001124683771605,
+	scaleX: 1,
+	scaleY: 1,
 	draggable: true
 };
 export const createCanvasElement = <Type extends CanvasElementType>(
@@ -81,7 +81,7 @@ export const addCanvasElement = <Type extends CanvasElementType>(
 		if (elements.find((element) => element?.config?.id === newElement?.config?.id)) {
 			throw new Error(`Element with id ${newElement?.config?.id} already exists.`);
 		}
-		return [...elements, newElement];
+		return [newElement, ...elements];
 	});
 };
 

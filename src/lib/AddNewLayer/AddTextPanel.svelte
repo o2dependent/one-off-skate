@@ -3,6 +3,8 @@
 	import { fly } from 'svelte/transition';
 	import { addCanvasElement, stage } from '$stores/canvasElements';
 	import TextConfigInput from '$lib/ConfigInputs/TextConfigInput.svelte';
+	import { getContrastColor } from '$utils/getContrastColor';
+	import { backgroundFill } from '$stores/canvasElements';
 
 	export let selected: string | undefined;
 	export let open: boolean;
@@ -10,7 +12,7 @@
 	export let height: number;
 
 	let text = '';
-	let fill = '#ffffff';
+	let fill = getContrastColor($backgroundFill ?? '#ffffff');
 
 	const createText = () => {
 		// add text to canvas elements
@@ -50,7 +52,7 @@
 		<p class="flex-grow text-left font-semibold">Add Text</p>
 	</div>
 	<TextConfigInput bind:text bind:fill />
-	<button class="btn btn-sm btn-ghost tooltip flex gap-2" type="submit">
+	<button disabled={!text} class="btn btn-sm btn-ghost tooltip flex gap-2" type="submit">
 		<div class="w-6">
 			<SvgIcon type="New" />
 		</div>
