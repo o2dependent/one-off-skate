@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type Konva from 'konva';
+	import { jsPDF } from 'jspdf';
 	import { canvasElements, focusElement, layer, stage, transformer } from '$stores/canvasElements';
 	import Canvas from './Canvas.svelte';
 	import EditorLayerButton from './EditorLayerButton.svelte';
@@ -8,7 +8,48 @@
 
 	let activeTab: 'layers' | 'config' = 'layers';
 
-	$: console.log($canvasElements);
+	// const printCanvas = () => {
+	// 	const doc = new jsPDF();
+	// 	const img = $layer?.toDataURL({
+	// 		pixelRatio: $layer?.pixelSize(),
+	// 		width: $layer?.width(),
+	// 		height: $layer?.height()
+	// 	});
+	// 	if (!img) return;
+	// 	doc.addImage({
+	// 		imageData: img,
+	// 		x: 0,
+	// 		y: 0,
+	// 		width: $layer?.width() ?? 0,
+	// 		height: $layer?.height() ?? 0,
+	// 		format: 'PNG'
+	// 	});
+	// 	doc.save('canvas.pdf');
+	// };
+	let printLoading = false;
+	const printCanvas = async (): Promise<void> => {
+		const doc = new jsPDF();
+		const img = new Image();
+		const dataURL = $layer?.toDataURL({
+			pixelRatio: $layer?.pixelSize(),
+			width: $layer?.width(),
+			height: $layer?.height()
+		});
+		if (!dataURL) return;
+		img.src = dataURL;
+		await new Promise<void>((resolve) => {
+			img.onload = () => {
+				const aspectRatio = img.height / img.width;
+				const height = 295;
+				const width = height / aspectRatio;
+				// const width = (img.width * 72) / 300; // convert pixels to points
+				// const height = (img.height * 72) / 300; // convert pixels to points
+				doc.addImage(img, 'JPEG', 0, 0, width, height);
+				resolve();
+			};
+		});
+		doc.save('canvas.pdf');
+	};
 </script>
 
 <div class="w-full h-full container mx-auto flex gap-4 p-4">
@@ -29,12 +70,12 @@
 		<div
 			class:rounded-tr-lg={activeTab === 'layers'}
 			class:rounded-tl-lg={activeTab === 'config'}
-			class="rounded-b-lg pb-4 flex flex-col h-full bg-base-100 border border-base-200 gap-2"
+			class="rounded-b-lg flex flex-col h-full bg-base-100 border border-base-200 gap-2 overflow-y-auto"
 		>
 			<AddNewLayer />
 			<CanvasColorInput />
 			<h2 class="mx-2 font-medium">Layers</h2>
-			<div class="px-2 flex flex-col gap-2">
+			<div class="px-2 flex-grow flex flex-col gap-2">
 				{#each $canvasElements as { label, type, config }, idx}
 					<EditorLayerButton
 						handleClick={() => config.id && focusElement(config.id)}
@@ -52,7 +93,7 @@
 								<circle fill="currentColor" cx="184" cy="232" r="24" />
 								<path
 									fill="currentColor"
-									d="M256 288c45.42 0 83.62 29.53 95.71 69.83a8 8 0 01-7.87 10.17H168.15a8 8 0 01-7.82-10.17C172.32 317.53 210.53 288 256 288z"
+									d="M256 288c45.42 0 83.62 29.53 95.71 69.83a8 8 0 01-7.87 10.17H168.15a8 8 0 01-7.82-10.17C172.32 317.53 .$layer?.53() ?? 053 288 256 288z"
 								/>
 								<circle fill="currentColor" cx="328" cy="232" r="24" /><circle
 									cx="256"
@@ -68,6 +109,23 @@
 					</div>
 				{/each}
 			</div>
+			<button
+				disabled={printLoading}
+				on:click={() => {
+					printLoading = true;
+					printCanvas().finally(() => {
+						printLoading = false;
+					});
+				}}
+				type="button"
+				class="btn btn-success text-success-content m-2"
+			>
+				{#if printLoading}
+					<span class="loading loading-spinner loading-md" />
+				{:else}
+					Add to cart!
+				{/if}
+			</button>
 		</div>
 	</div>
 </div>

@@ -78,7 +78,7 @@
 	{#if selected}
 		<div in:slide out:slide class="pt-2 flex flex-col gap-2">
 			<!-- SECTION: Tools -->
-			<div class="grid grid-cols-2 gap-2 w-full">
+			<div class="grid grid-cols-2 gap-2">
 				<div
 					class="rounded-md bg-base-content/10 px-2 py-2 h-fit w-fit items-center justify-center flex gap-2"
 				>
