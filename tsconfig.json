@@ -2,6 +2,8 @@
 	"extends": "./.svelte-kit/tsconfig.json",
 	"compilerOptions": {
 		"paths": {
+			"$schemas": ["./src/schemas"],
+			"$schemas/*": ["./src/schemas/*"],
 			"$lib": ["./src/lib"],
 			"$lib/*": ["./src/lib/*"],
 			"$services": ["./src/services"],
