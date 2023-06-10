@@ -5,30 +5,13 @@
 	import EditorLayerButton from './EditorLayerButton.svelte';
 	import AddNewLayer from './AddNewLayer/AddNewLayer.svelte';
 	import CanvasColorInput from './CanvasColorInput.svelte';
+	import { postPDF } from '$services/postPDF';
 
 	let activeTab: 'layers' | 'config' = 'layers';
 
-	// const printCanvas = () => {
-	// 	const doc = new jsPDF();
-	// 	const img = $layer?.toDataURL({
-	// 		pixelRatio: $layer?.pixelSize(),
-	// 		width: $layer?.width(),
-	// 		height: $layer?.height()
-	// 	});
-	// 	if (!img) return;
-	// 	doc.addImage({
-	// 		imageData: img,
-	// 		x: 0,
-	// 		y: 0,
-	// 		width: $layer?.width() ?? 0,
-	// 		height: $layer?.height() ?? 0,
-	// 		format: 'PNG'
-	// 	});
-	// 	doc.save('canvas.pdf');
-	// };
 	let printLoading = false;
 	const printCanvas = async (): Promise<void> => {
-		const doc = new jsPDF();
+		// create new image to get aspect ratio of canvas
 		const img = new Image();
 		const dataURL = $layer?.toDataURL({
 			pixelRatio: $layer?.pixelSize(),
@@ -37,18 +20,23 @@
 		});
 		if (!dataURL) return;
 		img.src = dataURL;
+		let height = 0;
+		let width = 0;
 		await new Promise<void>((resolve) => {
 			img.onload = () => {
 				const aspectRatio = img.height / img.width;
-				const height = 295;
-				const width = height / aspectRatio;
+				height = 295;
+				width = height / aspectRatio;
 				// const width = (img.width * 72) / 300; // convert pixels to points
 				// const height = (img.height * 72) / 300; // convert pixels to points
-				doc.addImage(img, 'JPEG', 0, 0, width, height);
 				resolve();
 			};
 		});
-		doc.save('canvas.pdf');
+		await postPDF({
+			dataURL
+			// width,
+			// height
+		});
 	};
 </script>
 
