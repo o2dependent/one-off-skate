@@ -1,5 +1,5 @@
 <script lang="ts">
-	import TextConfigInput from '$lib/ConfigInputs/TextConfigInput.svelte';
+	import TextConfigInput from '$lib/Canvas/ConfigInputs/TextConfigInput.svelte';
 	import type { CanvasElementConfigMap } from '$stores/canvasElementsTypes';
 
 	export let config: CanvasElementConfigMap['Text'] | undefined;

@@ -1,10 +1,8 @@
 <script lang="ts">
-	import SvgIcon from '$lib/svgs/SvgIcon.svelte';
+	import SvgIcon from '$lib/Canvas/svgs/SvgIcon.svelte';
 	import { fly } from 'svelte/transition';
-	import { addCanvasElement, stage } from '$stores/canvasElements';
-	import SvgImageIcon from '$lib/svgs/SvgImageIcon.svelte';
-	import ImageConfigInput from '$lib/ConfigInputs/ImageConfigInput.svelte';
-	import { addImageElement } from '$lib/ConfigInputs/addImageElement';
+	import ImageConfigInput from '$lib/Canvas/ConfigInputs/ImageConfigInput.svelte';
+	import { addImageElement } from '$lib/Canvas/ConfigInputs/addImageElement';
 
 	export let selected: string | undefined;
 	export let open: boolean;

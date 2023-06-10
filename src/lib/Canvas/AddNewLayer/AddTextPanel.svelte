@@ -1,8 +1,8 @@
 <script lang="ts">
-	import SvgIcon from '$lib/svgs/SvgIcon.svelte';
+	import SvgIcon from '$lib/Canvas/svgs/SvgIcon.svelte';
 	import { fly } from 'svelte/transition';
 	import { addCanvasElement, stage } from '$stores/canvasElements';
-	import TextConfigInput from '$lib/ConfigInputs/TextConfigInput.svelte';
+	import TextConfigInput from '$lib/Canvas/ConfigInputs/TextConfigInput.svelte';
 	import { getContrastColor } from '$utils/getContrastColor';
 	import { backgroundFill } from '$stores/canvasElements';
 

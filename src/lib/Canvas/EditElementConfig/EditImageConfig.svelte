@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ImageConfigInput from '$lib/ConfigInputs/ImageConfigInput.svelte';
+	import ImageConfigInput from '$lib/Canvas/ConfigInputs/ImageConfigInput.svelte';
 	import { stage } from '$stores/canvasElements';
 	import type { CanvasElementConfigMap } from '$stores/canvasElementsTypes';
 

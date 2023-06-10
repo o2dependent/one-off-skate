@@ -4,6 +4,7 @@
 	import { slide } from 'svelte/transition';
 	import SvgIcon from './svgs/SvgIcon.svelte';
 	import EditElementConfig from './EditElementConfig/EditElementConfig.svelte';
+	import EditorButton from './EditorButton.svelte';
 
 	export let type: CanvasElementType | 'New' = 'Image';
 	export let label = 'element';
@@ -60,21 +61,7 @@
 </script>
 
 <div>
-	<button
-		on:click={handleClick}
-		type="button"
-		class="editor-btn btn btn-ghost w-full"
-		class:btn-active={selected}
-		class:tooltip
-		data-tip={tooltip}
-	>
-		<div class="icon avatar">
-			<div class="rounded w-6">
-				<SvgIcon type={typeof id === 'undefined' ? 'Bug' : type} />
-			</div>
-		</div>
-		<p class="flex-grow">{typeof id === 'undefined' ? 'An error occured!' : label}</p>
-	</button>
+	<EditorButton {type} {id} {handleClick} {label} {tooltip} />
 	{#if selected}
 		<div in:slide out:slide class="pt-2 flex flex-col gap-2">
 			<!-- SECTION: Tools -->

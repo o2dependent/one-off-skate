@@ -8,7 +8,7 @@
 </script>
 
 {#if mounted}
-	{#await import('$lib/Editor.svelte')}
+	{#await import('$lib/Canvas/Editor.svelte')}
 		<h1>Loading...</h1>
 	{:then { default: Editor }}
 		<Editor />

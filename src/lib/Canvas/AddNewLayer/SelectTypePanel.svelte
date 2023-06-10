@@ -1,5 +1,5 @@
 <script lang="ts">
-	import SvgIcon from '$lib/svgs/SvgIcon.svelte';
+	import SvgIcon from '$lib/Canvas/svgs/SvgIcon.svelte';
 	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
 

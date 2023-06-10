@@ -1,6 +1,6 @@
 <script lang="ts">
-	import EditorLayerButton from '$lib/EditorLayerButton.svelte';
 	import { fly } from 'svelte/transition';
+	import EditorButton from '../EditorButton.svelte';
 
 	export let open: boolean;
 	export let dir: -1 | 1;
@@ -13,11 +13,5 @@
 	in:fly|local={{ x: -400 }}
 	out:fly|local={{ x: -400 }}
 >
-	<EditorLayerButton
-		config={{ id: 'NotOpenNewButton' }}
-		handleClick={() => ((open = true), (dir = 1))}
-		id="New"
-		label="New"
-		type="New"
-	/>
+	<EditorButton handleClick={() => ((open = true), (dir = 1))} id="New" label="New" type="New" />
 </div>
