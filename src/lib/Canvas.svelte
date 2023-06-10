@@ -107,7 +107,7 @@
 		bind:handle={$stage}
 		config={{ width, height }}
 	>
-		<Layer bind:handle={$layer}>
+		<Layer config={{ width: maskWidth, height: maskHeight, x: maskX, y: 0 }} bind:handle={$layer}>
 			<Rect
 				config={{ height: maskHeight, width: maskWidth, x: maskX, y: maskY, fill: $backgroundFill }}
 			/>
