@@ -109,7 +109,7 @@
 	>
 		<Layer config={{ width: maskWidth, height: maskHeight, x: maskX, y: 0 }} bind:handle={$layer}>
 			<Rect
-				config={{ height: maskHeight, width: maskWidth, x: maskX, y: maskY, fill: $backgroundFill }}
+				config={{ height: maskHeight, width: maskWidth, x: 0, y: maskY, fill: $backgroundFill }}
 			/>
 			{#each [...$canvasElements].reverse() as element, idx}
 				{@const {
