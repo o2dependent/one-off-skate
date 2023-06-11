@@ -28,3 +28,16 @@
 	</div>
 	<p class="flex-grow">{typeof id === 'undefined' ? 'An error occured!' : label}</p>
 </button>
+
+<style lang="postcss">
+	.editor-btn {
+		grid-template-columns: auto 1fr;
+		@apply grid gap-2 text-left normal-case;
+	}
+	.editor-btn .icon {
+		@apply grid place-items-center;
+	}
+	.editor-btn p {
+		@apply h-fit text-ellipsis overflow-hidden;
+	}
+</style>
